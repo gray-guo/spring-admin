@@ -16,10 +16,7 @@ public class WeizhangApplicationTests {
 
     @Test
     public void test() {
-        System.out.println("Run JUnit");
-        for (int i = 100; i < 105; i++){
-            userService.insertMiddleData(i, i);
-        }
+
     }
 
 }
