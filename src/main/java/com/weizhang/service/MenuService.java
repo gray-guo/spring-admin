@@ -30,6 +30,11 @@ public class MenuService {
     }
 
 
+    public int insert(Menu menu){
+        return menuDao.insert(menu);
+    }
+
+
     public List<Menu> getLeftMenu() {
         List<Menu> list = menuDao.getList();
         MenuTree menuTree = new MenuTree(list);

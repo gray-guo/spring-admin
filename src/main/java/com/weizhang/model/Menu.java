@@ -14,8 +14,6 @@ public class Menu {
 
     private String name;
 
-    private String perms;
-
 
     public List<Menu> getChildren() {
         return children;
@@ -67,13 +65,7 @@ public class Menu {
         this.name = name;
     }
 
-    public String getPerms() {
-        return perms;
-    }
 
-    public void setPerms(String perms) {
-        this.perms = perms;
-    }
 
     public int getSort() {
         return sort;

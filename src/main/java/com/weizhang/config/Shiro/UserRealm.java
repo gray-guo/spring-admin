@@ -64,8 +64,8 @@ public class UserRealm extends AuthorizingRealm {
 //
 //        for(Role role : roles){
 //            rolesCollection.add(role.getName());
-//            List<Permission> permissions = role.getPermissions();
-//            for (Permission permission : permissions){
+//            List<PermissionExists> permissions = role.getPermissions();
+//            for (PermissionExists permission : permissions){
 //                premissionCollection.add(permission.getUrl());
 //            }
 //            info.addStringPermissions(premissionCollection);

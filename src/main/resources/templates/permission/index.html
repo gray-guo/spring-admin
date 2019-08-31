@@ -2,30 +2,33 @@
 
 <div th:fragment="content">
     <div class="weadmin-body">
-        <form class="layui-form" enctype="multipart/form-data">
-            <input type="hidden" name="roles" id="roles" value="">
+        <form class="layui-form">
             <div class="layui-form-item">
                 <label for="name" class="layui-form-label">
                     <span class="we-red">*</span>登录名
                 </label>
+                <input type="hidden" name="id" th:value="${user.id}">
                 <div class="layui-input-inline">
-                    <input type="text" id="name" name="name" required="" lay-verify="required"
+                    <input type="text" disabled="disabled" th:value="${user.name}" id="name" name="name" required="" lay-verify="required"
                            autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">
-                    <span class="we-red">*</span>将会成为您唯一的登入名
+
                 </div>
             </div>
 
+
             <div class="layui-form-item">
                 <label class="layui-form-label"><span class="we-red">*</span>角色</label>
-                <div class="layui-input-block" th:each="item: ${ roles}">
-                    <input type="checkbox" name="checkbox_roles"  lay-skin="primary" th:value="${item.id}" th:attr="title=${item.name}">
+                <div class="layui-input-block">
+                    <input type="checkbox" name="like1[write]" lay-skin="primary" title="超级管理员" checked="">
+                    <input type="checkbox" name="like1[read]" lay-skin="primary" title="编辑人员">
+                    <input type="checkbox" name="like1[write]" lay-skin="primary" title="宣传人员" checked="">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label for="L_pass" class="layui-form-label">
-                    <span class="we-red">*</span>密码
+                    <span class="we-red">*</span>旧密码
                 </label>
                 <div class="layui-input-inline">
                     <input type="password" id="L_pass" name="pass" required="" lay-verify="pass"
@@ -36,8 +39,20 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">
+                    <span class="we-red">*</span>新密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="L_pass" name="newpassword" required="" lay-verify="newpassword"
+                           autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    6到16个字符
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label">
-                    <span class="we-red">*</span>确认密码
+                    <span class="we-red">*</span>重复确认密码
                 </label>
                 <div class="layui-input-inline">
                     <input type="password" id="L_repass" name="repass" required="" lay-verify="repass"
@@ -46,17 +61,16 @@
             </div>
             <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label"></label>
-                <input class="layui-btn"  lay-filter="add" lay-submit  value="增加">
+                <input class="layui-btn"  lay-filter="add" lay-submit  value="保存">
 
             </div>
         </form>
     </div>
-
     <script type="text/javascript">
         layui.extend({
             admin: '{/}../../admin/static/js/admin'
         });
-        layui.use(['form', 'layer', 'admin', ], function () {
+        layui.use(['form', 'layer', 'admin'], function () {
             var form = layui.form,
                 admin = layui.admin,
                 $ = layui.jquery,
@@ -69,7 +83,7 @@
                         return '昵称至少得5个字符啊';
                     }
                 },
-                pass: [/(.+){6,12}$/, '密码必须6到12位'],
+                newpassword: [/(.+){6,12}$/, '密码必须6到12位'],
                 repass: function (value) {
                     if ($('#L_pass').val() != $('#L_repass').val()) {
                         return '两次密码不一致';
@@ -77,32 +91,23 @@
                 }
             });
 
-
             //监听提交
             form.on('submit(add)', function (data) {
-                //获取checkbox数据
-                var arrRoles = [];
-                $("input:checkbox[name='checkbox_roles']:checked").each(function(){
-                    arrRoles.push($(this).val());
-                });
-                var roles = JSON.stringify(arrRoles);
-                data.field.roles =  roles;
-                console.log(data.field);
                 $.ajax({
-                    url: "/admin/user/doadd",
+                    url: "/admin/user/modify",
                     type: "post",
                     dataType: "json",
                     data: data.field,
                     success: function (res) {
                         if(res.code == 1){
-                            layer.alert("增加成功", {icon: 6}, function () {
+                            layer.alert("成功", {icon: 6}, function () {
                                 // 获得frame索引
                                 var index = parent.layer.getFrameIndex(window.name);
                                 //关闭当前frame
                                 parent.layer.close(index);
                             });
                         }else{
-                            layer.alert("添加失败 \r\n" + res.msg);
+                            layer.alert("失败 \r\n" + res.msg);
                         }
                     }
                 });

@@ -1,5 +1,7 @@
 package com.weizhang.model;
 
+import java.util.Date;
+
 public class Permission {
     private int id;
 
@@ -19,15 +21,37 @@ public class Permission {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     private String name;
-    private String url;
+
+
+    public String getPerm() {
+        return perm;
+    }
+
+    public void setPerm(String perm) {
+        this.perm = perm;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    private String perm;
+
+    private int type;
+
+    public Date getCratedAt() {
+        return cratedAt;
+    }
+
+    public void setCratedAt(Date cratedAt) {
+        this.cratedAt = cratedAt;
+    }
+
+    private Date cratedAt;
 
 }

@@ -1,15 +1,8 @@
 package com.weizhang.model;
 
-import java.util.List;
+import java.util.Date;
 
 public class Role {
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -19,16 +12,27 @@ public class Role {
         this.name = name;
     }
 
-    private String id;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
     private String name;
 
-    public List<Permission> getPermissions() {
-        return permissions;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    private List<Permission> permissions;
+    private Date createdAt;
+
+
 }

@@ -1,42 +1,27 @@
 package com.weizhang.controller;
 
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.weizhang.common.R;
-import com.weizhang.model.Menu;
-import com.weizhang.service.MenuService;
+import com.weizhang.model.Role;
+import com.weizhang.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Controller
-@RequestMapping(value = "/menu")
-public class MenuController extends BaseController {
+@RequestMapping( value = "/role")
+public class RoleController extends BaseController {
 
     @Autowired
-    private MenuService menuService;
-
-    /**
-     * 获取左侧菜单
-     * @return
-     */
-
-    @RequestMapping(value = "/left-menu")
-    @ResponseBody
-    public R getLeftMenu(){
-        List<Menu> menuList = menuService.getLeftMenu();
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", menuList);
-        return R.success(map);
-    }
-
-
+    private RoleService roleService;
 
     /**
      * 列表页
@@ -56,13 +41,13 @@ public class MenuController extends BaseController {
         params.put("end", end);
 
         PageHelper.startPage(page, PAGESIZE);
-        List<Menu> list = menuService.getList();
+        List<Role> list = roleService.getList();
         PageInfo pageInfo = new PageInfo(list);
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("params", params);
 
-        modelAndView.setViewName("menu/list");
+        modelAndView.setViewName("role/list");
         modelAndView.addObject("list", pageInfo);
 
         return modelAndView;
@@ -72,21 +57,21 @@ public class MenuController extends BaseController {
     @GetMapping(value = "index")
     public ModelAndView index(@RequestParam("id") int id) throws Exception {
 
-        Menu menu = menuService.getRow(id);
-        if (menu == null) {
+        Role role = roleService.getRow(id);
+        if (role == null) {
             throw new Exception("Not Found");
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("row", menu);
-        modelAndView.setViewName("menu/index");
+        modelAndView.addObject("row", role);
+        modelAndView.setViewName("role/index");
         return modelAndView;
     }
 
     @GetMapping(value = "add")
     public ModelAndView add() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("menu/add");
+        modelAndView.setViewName("role/add");
         return modelAndView;
     }
 
@@ -97,19 +82,20 @@ public class MenuController extends BaseController {
      */
     @PostMapping(value = "doadd")
     @ResponseBody
-    public R doAdd(@RequestParam("name") String name,
-                   @RequestParam("perm") String perm,
-                   @RequestParam("type") int type
-    ) {
+    public R doAdd(@RequestParam("name") String name) {
+        if (roleService.getName(name) != null) {
+            return R.error(name + " 存在!");
+        }
 
-        Menu menu = new Menu();
-        menu.setName(name);
-        menu.setType(type);
-        int id = menuService.insert(menu);
+        Role role = new Role();
+        role.setName(name);
+        role.setCreatedAt(new Date());
+        int id = roleService.inser(role);
         if (id > 0) {
             return R.success();
         }
         return R.error();
     }
+
 
 }

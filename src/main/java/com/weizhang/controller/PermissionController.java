@@ -3,40 +3,24 @@ package com.weizhang.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.weizhang.common.R;
-import com.weizhang.model.Menu;
-import com.weizhang.service.MenuService;
+import com.weizhang.model.Permission;
+import com.weizhang.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Controller
-@RequestMapping(value = "/menu")
-public class MenuController extends BaseController {
+@RequestMapping(value = "/permission")
+public class PermissionController extends BaseController {
 
     @Autowired
-    private MenuService menuService;
-
-    /**
-     * 获取左侧菜单
-     * @return
-     */
-
-    @RequestMapping(value = "/left-menu")
-    @ResponseBody
-    public R getLeftMenu(){
-        List<Menu> menuList = menuService.getLeftMenu();
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", menuList);
-        return R.success(map);
-    }
-
-
+    private PermissionService permissionService;
 
     /**
      * 列表页
@@ -56,13 +40,13 @@ public class MenuController extends BaseController {
         params.put("end", end);
 
         PageHelper.startPage(page, PAGESIZE);
-        List<Menu> list = menuService.getList();
+        List<Permission> list = permissionService.getList();
         PageInfo pageInfo = new PageInfo(list);
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("params", params);
 
-        modelAndView.setViewName("menu/list");
+        modelAndView.setViewName("permission/list");
         modelAndView.addObject("list", pageInfo);
 
         return modelAndView;
@@ -72,21 +56,21 @@ public class MenuController extends BaseController {
     @GetMapping(value = "index")
     public ModelAndView index(@RequestParam("id") int id) throws Exception {
 
-        Menu menu = menuService.getRow(id);
-        if (menu == null) {
+        Permission permission = permissionService.getRow(id);
+        if (permission == null) {
             throw new Exception("Not Found");
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("row", menu);
-        modelAndView.setViewName("menu/index");
+        modelAndView.addObject("row", permission);
+        modelAndView.setViewName("permission/index");
         return modelAndView;
     }
 
     @GetMapping(value = "add")
     public ModelAndView add() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("menu/add");
+        modelAndView.setViewName("permission/add");
         return modelAndView;
     }
 
@@ -100,16 +84,17 @@ public class MenuController extends BaseController {
     public R doAdd(@RequestParam("name") String name,
                    @RequestParam("perm") String perm,
                    @RequestParam("type") int type
-    ) {
+                   ) {
 
-        Menu menu = new Menu();
-        menu.setName(name);
-        menu.setType(type);
-        int id = menuService.insert(menu);
+        Permission permission = new Permission();
+        permission.setName(name);
+        permission.setPerm(perm);
+        permission.setType(type);
+        permission.setCratedAt(new Date());
+        int id = permissionService.insert(permission);
         if (id > 0) {
             return R.success();
         }
         return R.error();
     }
-
 }
